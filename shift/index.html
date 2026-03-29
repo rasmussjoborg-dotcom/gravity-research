@@ -3,32 +3,320 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shift — Behavioral Spending Nudge App</title>
-  <meta name="description" content="Shift: autonomous research into behavioral spending nudges. Powered by Gravity Claw.">
+  <title>Shift — Your personal spending nudger — AI-powered weekly challenges that build better money habits</title>
+  <meta name="description" content="Shift: Your personal spending nudger — AI-powered weekly challenges that build better money habits. Autonomous research engine.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    :root{--bg:#08080c;--s:#0f0f16;--b:#1e1e2e;--t:#e4e4e7;--td:#71717a;--accent:#34d399}
-    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center}
-    .wrap{max-width:480px;padding:2rem}
-    .icon{font-size:3rem;margin-bottom:1rem}
-    h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--accent),#a7f3d0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}
-    p{color:var(--td);font-size:.9rem;line-height:1.5;margin-bottom:1rem}
-    .badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-family:'JetBrains Mono',monospace;background:var(--s);border:1px solid var(--b);padding:.35rem .75rem;border-radius:100px}
-    .dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:b 2s ease-in-out infinite}
-    @keyframes b{0%,100%{opacity:1}50%{opacity:.3}}
-    a{color:var(--accent);text-decoration:none;font-size:.75rem;font-family:'JetBrains Mono',monospace;display:block;margin-top:1.5rem}
-    a:hover{text-decoration:underline}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#08080c;--s:#0f0f16;--s2:#16161f;--b:#1e1e2e;--t:#e4e4e7;--td:#71717a;--accent:#34d399;--ad:#059669}
+    body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--t);line-height:1.6;min-height:100vh}
+    .wrap{max-width:980px;margin:0 auto;padding:1.5rem}
+
+    header{text-align:center;padding:2.5rem 0 1.5rem;border-bottom:1px solid var(--b);margin-bottom:1.5rem}
+    .logo{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);font-weight:500}
+    h1{font-size:2rem;font-weight:700;letter-spacing:-.02em;background:linear-gradient(135deg,var(--accent),#e8d5a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.3rem 0}
+    .sub{color:var(--td);font-size:.85rem}
+    .meta{display:flex;gap:1.5rem;justify-content:center;margin-top:.75rem;font-size:.75rem;color:var(--td);font-family:'JetBrains Mono',monospace;flex-wrap:wrap}
+    .back-link{display:inline-block;margin-bottom:.5rem;color:var(--accent);font-size:.75rem;text-decoration:none;font-family:'JetBrains Mono',monospace}
+    .back-link:hover{text-decoration:underline}
+
+    .readiness-row{display:flex;align-items:center;gap:2rem;margin:1.5rem 0;justify-content:center;flex-wrap:wrap}
+    .readiness{text-align:center}
+    .readiness svg{display:block;margin:0 auto}
+    .readiness-phase{font-size:1rem;font-weight:700;margin-top:.3rem;letter-spacing:.05em}
+    .readiness-sub{font-size:.75rem;color:var(--td);margin-top:.2rem}
+
+    .pipeline{margin:1.5rem 0;overflow-x:auto;padding:.5rem 0}
+
+    .tonight-summary{background:var(--s);border:1px solid var(--b);border-radius:8px;padding:.75rem 1rem;font-size:.85rem;color:var(--td);margin:1rem 0}
+    .tonight-summary strong{color:var(--accent)}
+
+    h2{font-size:.95rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);margin:2rem 0 .75rem;padding-bottom:.4rem;border-bottom:1px solid var(--b)}
+
+    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem}
+    .card{background:var(--s);border:1px solid var(--b);border-radius:8px;padding:1rem;transition:border-color .2s}
+    .card:hover{border-color:var(--accent)30}
+    .card-top{display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem}
+    .card-icon{font-size:1.1rem}
+    .card-title{font-weight:600;font-size:.9rem;flex:1}
+    .card-badge{font-size:.65rem;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.04em}
+    .card-eli5{font-size:.85rem;color:var(--td);margin-bottom:.5rem;line-height:1.4}
+    .card-points{padding-left:1rem;margin-bottom:.5rem}
+    .card-points li{font-size:.8rem;color:var(--t);margin-bottom:.25rem;line-height:1.4}
+    .conf-bar{height:4px;background:var(--s2);border-radius:2px;overflow:hidden;margin:.4rem 0 .15rem}
+    .conf-fill{height:100%;border-radius:2px;transition:width .5s ease}
+    .card-conf-label{font-size:.65rem;color:var(--td);font-family:'JetBrains Mono',monospace}
+    .needs-work{margin-top:.5rem;display:flex;flex-wrap:wrap;gap:.3rem;align-items:center}
+    .nw-label{font-size:.65rem;color:var(--td);font-family:'JetBrains Mono',monospace}
+    .nw-tag{font-size:.65rem;background:#1f0f0f;color:#ef4444;border:1px solid #ef444430;padding:.1rem .4rem;border-radius:3px}
+
+    .blockers-section{margin:1.5rem 0}
+    .blocker{background:#1f0f0f;border:1px solid #ef444430;border-radius:8px;padding:.75rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+    .blocker-type{font-size:.6rem;background:#ef444420;color:#ef4444;padding:.15rem .4rem;border-radius:3px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+    .blocker-desc{font-size:.85rem;flex:1}
+    .blocker-comp{font-size:.65rem;color:var(--td);font-family:'JetBrains Mono',monospace}
+
+    .signals-section{margin:1.5rem 0}
+    .signal{background:linear-gradient(135deg,#1a1708,#0f0f16);border:1px solid var(--accent)30;border-radius:8px;padding:.75rem 1rem;margin-bottom:.5rem;display:flex;align-items:flex-start;gap:.75rem;flex-wrap:wrap}
+    .signal-icon{font-size:1.2rem;margin-top:.1rem}
+    .signal-body{flex:1;min-width:200px}
+    .signal-title{font-weight:600;font-size:.85rem;color:var(--accent)}
+    .signal-desc{font-size:.8rem;color:var(--td);margin-top:.2rem;line-height:1.4}
+    .signal-meta{display:flex;gap:.5rem;margin-top:.3rem;align-items:center}
+    .signal-status{font-size:.6rem;padding:.1rem .35rem;border-radius:3px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.04em}
+    .signal-status.spotted{background:var(--accent)20;color:var(--accent)}
+    .signal-status.investigating{background:#3b82f620;color:#3b82f6}
+    .signal-status.confirmed{background:#22c55e20;color:#22c55e}
+    .signal-comp{font-size:.6rem;color:var(--td);font-family:'JetBrains Mono',monospace}
+
+    .tl-entry{display:flex;align-items:center;gap:.75rem;padding:.5rem .75rem;background:var(--s);border:1px solid var(--b);border-radius:6px;margin-bottom:.4rem;flex-wrap:wrap}
+    .tl-night{font-size:.8rem;font-weight:600;min-width:80px}
+    .tl-date{font-size:.7rem;color:var(--td);font-family:'JetBrains Mono',monospace;min-width:60px}
+    .tl-questions{font-size:.7rem;color:var(--accent);font-family:'JetBrains Mono',monospace}
+    .tl-sum{font-size:.75rem;color:var(--td);flex:1;min-width:200px}
+
+    footer{text-align:center;padding:1.5rem 0;margin-top:1.5rem;border-top:1px solid var(--b);font-size:.7rem;color:var(--td)}
+    footer a{color:var(--ad);text-decoration:none}
+
+    .done-banner{background:linear-gradient(135deg,#0f2f14,#0f1f0f);border:2px solid #22c55e;border-radius:12px;padding:1.5rem;text-align:center;margin:1.5rem 0;animation:pulse 2s ease-in-out infinite}
+    .done-banner h2{border:none;color:#22c55e;font-size:1.3rem;margin:0 0 .5rem;padding:0}
+    .done-banner p{color:#86efac;font-size:.9rem}
+    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 #22c55e40}50%{box-shadow:0 0 20px 5px #22c55e20}}
+
+    @media(max-width:640px){
+      .wrap{padding:1rem}
+      h1{font-size:1.5rem}
+      .cards{grid-template-columns:1fr}
+      .readiness-row{flex-direction:column}
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="icon">💸</div>
-    <h1>Shift</h1>
-    <p>Behavioral spending nudge app — weekly challenges that make saving feel effortless.</p>
-    <div class="badge"><span class="dot"></span> Research starting tonight</div>
-    <a href="https://research.rsjo.io">← research.rsjo.io</a>
+    <header>
+      <a href="https://research.rsjo.io" class="back-link">← research.rsjo.io</a>
+      <div class="logo">💸 Shift</div>
+      <h1>Your personal spending nudger — AI-powered weekly challenges that build better money habits</h1>
+      <p class="sub">Autonomous research engine · Powered by Gravity Claw</p>
+      <div class="meta">
+        <span>📅 Night 1</span>
+        <span>🔄 Waiting for first night</span>
+        <span>📊 FOUNDATIONS</span>
+      </div>
+    </header>
+
+    
+
+    <div class="readiness-row">
+      
+    <div class="readiness">
+      <svg width="180" height="180" viewBox="0 0 180 180">
+        <circle cx="90" cy="90" r="70" fill="none" stroke="#1e1e2e" stroke-width="10"/>
+        <circle cx="90" cy="90" r="70" fill="none" stroke="#3b82f6" stroke-width="10"
+          stroke-dasharray="439.822971502571" stroke-dashoffset="316.6725394818511"
+          stroke-linecap="round" transform="rotate(-90 90 90)"
+          style="transition: stroke-dashoffset 1s ease"/>
+        <text x="90" y="86" text-anchor="middle" dominant-baseline="central" fill="#e4e4e7" font-size="28" font-weight="700" font-family="Inter, sans-serif">28%</text>
+        <text x="90" y="106" text-anchor="middle" dominant-baseline="central" fill="#71717a" font-size="10" font-family="JetBrains Mono, monospace">COMPLETE</text>
+      </svg>
+      <div class="readiness-phase" style="color: #3b82f6">📚 FOUNDATIONS</div>
+      <div class="readiness-sub">0/9 components refined</div>
+    </div>
+    </div>
+
+    <h2>Pipeline</h2>
+    <div class="pipeline"><svg viewBox="0 0 956 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:956px;height:auto">
+    <defs><marker id="arr" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker></defs>
+    
+      <rect x="30" y="30" width="160" height="80" rx="10" fill="#0f0f16" stroke="#3b82f6" stroke-width="2" opacity="0.95"/>
+      <text x="110" y="52" text-anchor="middle" fill="#e4e4e7" font-size="11" font-weight="600" font-family="Inter, sans-serif">📚 Foundations</text>
+      <rect x="42" y="64" width="136" height="6" rx="3" fill="#1e1e2e"/>
+      <rect x="42" y="64" width="34" height="6" rx="3" fill="#3b82f6"/>
+      <text x="110" y="81" text-anchor="middle" fill="#71717a" font-size="9" font-family="JetBrains Mono, monospace">25%</text>
+      <circle cx="65" cy="96" r="5" fill="#3b82f6" opacity="0.9"><title>Spending Psychology: Researching</title></circle><circle cx="85" cy="96" r="5" fill="#3b82f6" opacity="0.9"><title>Competitive Landscape: Researching</title></circle>
+      <line x1="190" y1="70" x2="214" y2="70" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+      <rect x="214" y="30" width="160" height="80" rx="10" fill="#0f0f16" stroke="#f59e0b" stroke-width="2" opacity="0.95"/>
+      <text x="294" y="52" text-anchor="middle" fill="#e4e4e7" font-size="11" font-weight="600" font-family="Inter, sans-serif">🎯 Core Product</text>
+      <rect x="226" y="64" width="136" height="6" rx="3" fill="#1e1e2e"/>
+      <rect x="226" y="64" width="68" height="6" rx="3" fill="#f59e0b"/>
+      <text x="294" y="81" text-anchor="middle" fill="#71717a" font-size="9" font-family="JetBrains Mono, monospace">50%</text>
+      <circle cx="249" cy="96" r="5" fill="#f59e0b" opacity="0.9"><title>Weekly Challenge Design: Drafted</title></circle><circle cx="269" cy="96" r="5" fill="#f59e0b" opacity="0.9"><title>Target Users: Drafted</title></circle>
+      <line x1="374" y1="70" x2="398" y2="70" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+      <rect x="398" y="30" width="160" height="80" rx="10" fill="#0f0f16" stroke="#6b7280" stroke-width="2" opacity="0.95"/>
+      <text x="478" y="52" text-anchor="middle" fill="#e4e4e7" font-size="11" font-weight="600" font-family="Inter, sans-serif">🛡️ Money & Trust</text>
+      <rect x="410" y="64" width="136" height="6" rx="3" fill="#1e1e2e"/>
+      <rect x="410" y="64" width="18" height="6" rx="3" fill="#6b7280"/>
+      <text x="478" y="81" text-anchor="middle" fill="#71717a" font-size="9" font-family="JetBrains Mono, monospace">13%</text>
+      <circle cx="433" cy="96" r="5" fill="#3b82f6" opacity="0.9"><title>Business Model: Researching</title></circle><circle cx="453" cy="96" r="5" fill="#6b7280" opacity="0.9"><title>Trust & Anti-Cheat: Not Started</title></circle>
+      <line x1="558" y1="70" x2="582" y2="70" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+      <rect x="582" y="30" width="160" height="80" rx="10" fill="#0f0f16" stroke="#3b82f6" stroke-width="2" opacity="0.95"/>
+      <text x="662" y="52" text-anchor="middle" fill="#e4e4e7" font-size="11" font-weight="600" font-family="Inter, sans-serif">⚡ Technical</text>
+      <rect x="594" y="64" width="136" height="6" rx="3" fill="#1e1e2e"/>
+      <rect x="594" y="64" width="34" height="6" rx="3" fill="#3b82f6"/>
+      <text x="662" y="81" text-anchor="middle" fill="#71717a" font-size="9" font-family="JetBrains Mono, monospace">25%</text>
+      <circle cx="617" cy="96" r="5" fill="#3b82f6" opacity="0.9"><title>Open Banking & Data: Researching</title></circle><circle cx="637" cy="96" r="5" fill="#3b82f6" opacity="0.9"><title>AI Pattern Detection: Researching</title></circle>
+      <line x1="742" y1="70" x2="766" y2="70" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+      <rect x="766" y="30" width="160" height="80" rx="10" fill="#0f0f16" stroke="#3b82f6" stroke-width="2" opacity="0.95"/>
+      <text x="846" y="52" text-anchor="middle" fill="#e4e4e7" font-size="11" font-weight="600" font-family="Inter, sans-serif">✅ Growth</text>
+      <rect x="778" y="64" width="136" height="6" rx="3" fill="#1e1e2e"/>
+      <rect x="778" y="64" width="34" height="6" rx="3" fill="#3b82f6"/>
+      <text x="846" y="81" text-anchor="middle" fill="#71717a" font-size="9" font-family="JetBrains Mono, monospace">25%</text>
+      <circle cx="801" cy="96" r="5" fill="#3b82f6" opacity="0.9"><title>Retention & Go-to-Market: Researching</title></circle>
+      
+  </svg></div>
+
+    
+    <section class="blockers-section">
+        <h2>⚠️ Needs Your Input</h2>
+        
+          <div class="blocker">
+            <span class="blocker-type">DECISION</span>
+            <span class="blocker-desc">DPR-like privacy rising.[4] | Strict FI/PSD2 open banking mandates seamless integrations, boosting retention 10-15%.[3] |
+|</span>
+            <span class="blocker-comp">retention_growth</span>
+          </div>
+          <div class="blocker">
+            <span class="blocker-type">DECISION</span>
+            <span class="blocker-desc">**PSD2** is the EU's Revised Payment Services Directive mandating banks to provide sec</span>
+            <span class="blocker-comp">open_banking</span>
+          </div>
+       </section>
+    
+
+    <h2>What We Know So Far</h2>
+    <div class="cards">
+      
+      <div class="card">
+        <div class="card-top">
+          <span class="card-icon">🔵</span>
+          <div class="card-title">AI Pattern Detection</div>
+          <span class="card-badge" style="color:#3b82f6">Researching</span>
+        </div>
+        <p class="card-eli5">Research not started yet</p>
+        
+        <div class="conf-bar"><div class="conf-fill" style="width:0%;background:#3b82f6"></div></div>
+        <div class="card-conf-label">0% researched</div>
+        
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <span class="card-icon">🟡</span>
+          <div class="card-title">Weekly Challenge Design</div>
+          <span class="card-badge" style="color:#f59e0b">Drafted</span>
+        </div>
+        <p class="card-eli5">Research not started yet</p>
+        
+        <div class="conf-bar"><div class="conf-fill" style="width:0%;background:#f59e0b"></div></div>
+        <div class="card-conf-label">0% researched</div>
+        
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <span class="card-icon">🔵</span>
+          <div class="card-title">Competitive Landscape</div>
+          <span class="card-badge" style="color:#3b82f6">Researching</span>
+        </div>
+        <p class="card-eli5">Research not started yet</p>
+        
+        <div class="conf-bar"><div class="conf-fill" style="width:0%;background:#3b82f6"></div></div>
+        <div class="card-conf-label">0% researched</div>
+        
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <span class="card-icon">🔵</span>
+          <div class="card-title">Business Model</div>
+          <span class="card-badge" style="color:#3b82f6">Researching</span>
+        </div>
+        <p class="card-eli5">Research not started yet</p>
+        
+        <div class="conf-bar"><div class="conf-fill" style="width:0%;background:#3b82f6"></div></div>
+        <div class="card-conf-label">0% researched</div>
+        
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <span class="card-icon">🔵</span>
+          <div class="card-title">Open Banking &amp; Data</div>
+          <span class="card-badge" style="color:#3b82f6">Researching</span>
+        </div>
+        <p class="card-eli5">Research not started yet</p>
+        
+        <div class="conf-bar"><div class="conf-fill" style="width:0%;background:#3b82f6"></div></div>
+        <div class="card-conf-label">0% researched</div>
+        
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <span class="card-icon">🔵</span>
+          <div class="card-title">Retention &amp; Go-to-Market</div>
+          <span class="card-badge" style="color:#3b82f6">Researching</span>
+        </div>
+        <p class="card-eli5">Research not started yet</p>
+        
+        <div class="conf-bar"><div class="conf-fill" style="width:0%;background:#3b82f6"></div></div>
+        <div class="card-conf-label">0% researched</div>
+        
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <span class="card-icon">🔵</span>
+          <div class="card-title">Spending Psychology</div>
+          <span class="card-badge" style="color:#3b82f6">Researching</span>
+        </div>
+        <p class="card-eli5">This component explains the psychological biases that drive habitual overspending and how Shift's AI-powered nudges are designed to counteract them.</p>
+        <ul class="card-points"><li>People consistently underestimate the long-term financial impact of small, recurring purchases, leading to systematic overspending.</li><li>There's a significant gap between knowing one spends 'too much' and actually changing behavior, often due to impulsive (System 1) thinking overriding rational planning.</li><li>Shift's AI targets core cognitive biases like Present Bias (favoring immediate rewards) and Mental Accounting (categorizing money differently).</li><li>Shift's design aims to create temporal distance from spending impulses, fostering reflection and awareness *after* the fact, rather than relying on willpower in the moment.</li></ul>
+        <div class="conf-bar"><div class="conf-fill" style="width:0.75%;background:#3b82f6"></div></div>
+        <div class="card-conf-label">0.75% researched</div>
+        <div class="needs-work"><span class="nw-label">Still needs:</span><span class="nw-tag">The 'Mental Accounting' section is incomplete and needs to be finished.</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <span class="card-icon">⬜</span>
+          <div class="card-title">Trust &amp; Anti-Cheat</div>
+          <span class="card-badge" style="color:#6b7280">Not Started</span>
+        </div>
+        <p class="card-eli5">Research not started yet</p>
+        
+        <div class="conf-bar"><div class="conf-fill" style="width:0%;background:#6b7280"></div></div>
+        <div class="card-conf-label">0% researched</div>
+        
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <span class="card-icon">🟡</span>
+          <div class="card-title">Target Users</div>
+          <span class="card-badge" style="color:#f59e0b">Drafted</span>
+        </div>
+        <p class="card-eli5">Research not started yet</p>
+        
+        <div class="conf-bar"><div class="conf-fill" style="width:0%;background:#f59e0b"></div></div>
+        <div class="card-conf-label">0% researched</div>
+        
+      </div>
+    </div>
+
+    <h2>Research Timeline</h2>
+    
+      <div class="tl-entry">
+        <span class="tl-night">⏳ Night 1</span>
+        <span class="tl-date">Mar 29</span>
+        <span class="tl-questions">6 questions</span>
+        
+      </div>
+
+    <footer>
+      <p>Shift by <a href="https://rsjo.io">rsjo.io</a> · Powered by Gravity Claw (Gemini + Perplexity Sonar Pro)</p>
+    </footer>
   </div>
 </body>
 </html>
