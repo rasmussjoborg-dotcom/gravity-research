@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "shieldy.rsjo.io"
+        }
+      ],
+      "destination": "/shieldy/index.html"
+    }
+  ]
+}
