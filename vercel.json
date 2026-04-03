@@ -1,14 +1,15 @@
 {
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/(.*)",
+      "source": "/",
       "has": [
         {
           "type": "host",
           "value": "shieldy.rsjo.io"
         }
       ],
-      "destination": "/shieldy/$1"
+      "destination": "/shieldy",
+      "permanent": false
     }
   ]
 }
